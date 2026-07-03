@@ -1,7 +1,7 @@
 # assignment-4
 
 **Database schema for my business**
-
+```
     RESTAURANTS {
         UUID id PK
         VARCHAR location_name
@@ -53,3 +53,25 @@
     CUSTOMERS ||--o{ ORDERS: "places (1:M)"
     ORDERS ||--o{ ORDER_ITEMS: "contains"
     MENU_ITEMS ||--o{ ORDER_ITEMS: "included in"
+```
+
+**Index optimization demonstration**
+
+```
+EXPLAIN ANALYZE 
+SELECT * FROM orders 
+WHERE order_date BETWEEN '2025-01-01' AND '2025-01-31';
+```
+
+**Before Indexes**
+<img width="1166" height="411" alt="image" src="https://github.com/user-attachments/assets/7d82d4ee-652c-4843-b2a2-26a7df9eec0c" />
+
+**After Indexes**
+<img width="1253" height="365" alt="image" src="https://github.com/user-attachments/assets/7b2ebb05-ae6b-4fd1-bfa9-56760d3eb00a" />
+
+
+**Indexes**
+
+```
+CREATE INDEX idx_orders_order_date ON orders(order_date);
+```
