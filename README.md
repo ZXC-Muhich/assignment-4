@@ -1,4 +1,4 @@
-# assignment-4
+# Assignment 4
 
 **Database schema for my business**
 ```
@@ -54,6 +54,8 @@
     ORDERS ||--o{ ORDER_ITEMS: "contains"
     MENU_ITEMS ||--o{ ORDER_ITEMS: "included in"
 ```
+<img width="881" height="746" alt="image" src="https://github.com/user-attachments/assets/2ef8120d-5b13-4917-b774-b0e9ed2adb24" />
+
 
 **Index optimization demonstration**
 
@@ -94,4 +96,26 @@ BEGIN
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
+```
+
+**Procedure**
+```
+CREATE OR REPLACE PROCEDURE add_loyalty_points(
+    p_customer_id UUID, 
+    p_points_to_add INT
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    IF p_points_to_add <= 0 THEN
+        RAISE EXCEPTION 'Points to add must be greater than zero';
+    END IF;
+
+    UPDATE loyalty_cards
+    SET points = points + p_points_to_add
+    WHERE customer_id = p_customer_id;
+    
+    COMMIT;
+END;
+$$;
 ```
