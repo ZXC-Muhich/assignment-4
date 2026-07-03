@@ -75,3 +75,23 @@ WHERE order_date BETWEEN '2025-01-01' AND '2025-01-31';
 ```
 CREATE INDEX idx_orders_order_date ON orders(order_date);
 ```
+
+**Trigger**
+```
+CREATE TRIGGER trg_after_order_item_insert
+AFTER INSERT ON order_items
+FOR EACH ROW
+EXECUTE FUNCTION update_order_total();
+```
+**Function that will be called by trigger**
+```
+CREATE OR REPLACE FUNCTION update_order_total()
+RETURNS TRIGGER AS $$
+BEGIN
+    UPDATE orders
+    SET total_amount = total_amount + (NEW.quantity * NEW.item_price)
+    WHERE id = NEW.order_id;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+```
